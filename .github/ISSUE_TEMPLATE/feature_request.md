@@ -9,8 +9,5 @@ assignees: ''
 
 ## Describe about the feature
 
-<br>
 
 ## Describe your possible solutions
-
-<br>

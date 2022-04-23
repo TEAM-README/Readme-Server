@@ -9,24 +9,11 @@ assignees: ''
 
 ## Describe the bug
 
-<br> 
-
 
 ## To Reproduce
-
-<br> 
 
 
 ## Expected behavior
 
-<br> 
-
-
-## Screenshots
-
-<br> 
-
 
 ## Additional context
-
-<br>
