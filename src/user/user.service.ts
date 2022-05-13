@@ -23,8 +23,8 @@ export class UserService {
   async getOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
 
-    if (user === undefined) {
-      throw new NotFoundException('Invalid userId was passed');
+    if (user === null) {
+      throw new NotFoundException('user not found');
     }
 
     return user;
