@@ -21,22 +21,30 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
+  getAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  getOne(@Param('id') id: string) {
+    return this.userService.getOne(+id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Patch('/nickname')
+  updateNickname(@Body() updateData: UpdateUserDto) {
+    // @FIXME: Get user by parsing access-token
+    const userId = 1;
+
+    this.userService.updateNickname(userId, updateData);
+
+    return {
+      succes: true,
+      message: '닉네임 수정 완료',
+    };
   }
 }
