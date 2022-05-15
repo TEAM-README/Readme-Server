@@ -1,4 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book } from '../book/entities/book.entity';
@@ -46,7 +52,31 @@ export class FeedService {
     return `This action updates a #${id} feed`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} feed`;
+  async remove(feedId: string): Promise<ApiResponse> {
+    if (!+feedId) {
+      throw new HttpException(
+        {
+          message: '피드 삭제 실패. feedId 값을 확인하세요.',
+          data: feedId,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const feed = await this.feedsRepository.findOneBy({ id: +feedId });
+    if (!feed) {
+      throw new HttpException(
+        {
+          message: '피드 삭제 실패. 피드가 없습니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    await this.feedsRepository.save({
+      ...feed,
+      is_deleted: true,
+    });
+    return {
+      message: '피드 삭제 성공',
+    };
   }
 }

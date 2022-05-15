@@ -37,8 +37,8 @@ export class FeedController {
     return this.feedService.update(+id, updateFeedDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.feedService.remove(+id);
+  @Delete(':feedId')
+  remove(@Param('feedId') feedId: string) {
+    return this.feedService.remove(feedId);
   }
 }
