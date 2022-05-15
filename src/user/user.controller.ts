@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { ApiResponse } from 'src/types/global';
 
 @Controller('user')
 export class UserController {
@@ -23,6 +26,11 @@ export class UserController {
   @Get()
   getAll() {
     return this.userService.findAll();
+  }
+
+  @Get('/nickname')
+  getUserByNickname(@Query('query') nickname: string) {
+    return this.userService.getUserByNickname(nickname);
   }
 
   @Get(':id')
