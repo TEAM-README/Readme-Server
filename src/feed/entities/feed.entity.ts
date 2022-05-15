@@ -24,7 +24,7 @@ export class Feed {
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user_id: number;
+  user: User;
 
   @Column()
   sentence: string;
@@ -32,7 +32,9 @@ export class Feed {
   @Column()
   feeling: string;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   reported_count: number;
 
   @CreateDateColumn()

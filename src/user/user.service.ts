@@ -23,6 +23,7 @@ export class UserService {
 
   async getUserByNickname(nickname: string): Promise<ApiResponse<User>> {
     const user = await this.usersRepository.findOneBy({ nickname });
+
     let available;
 
     if (user) {
