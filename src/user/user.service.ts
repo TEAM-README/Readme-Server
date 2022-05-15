@@ -41,17 +41,14 @@ export class UserService {
     };
   }
 
-  async getOne(id: number): Promise<ApiResponse<User>> {
+  async getOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (user === null) {
       throw new NotFoundException('user not found');
     }
 
-    return {
-      message: '유저 조회 성공',
-      data: user,
-    };
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
