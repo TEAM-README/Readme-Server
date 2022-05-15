@@ -4,11 +4,13 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book } from '../book/entities/book.entity';
 import { ApiResponse } from '../types/global';
+import { User } from '../user/entities/user.entity';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
 import { Feed } from './entities/feed.entity';
@@ -20,6 +22,8 @@ export class FeedService {
     private feedsRepository: Repository<Feed>,
     @InjectRepository(Book)
     private booksRepository: Repository<Book>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
   async create(
     createFeedDto: CreateFeedDto,
@@ -46,6 +50,34 @@ export class FeedService {
 
   findOne(id: number) {
     return `This action returns a #${id} feed`;
+  }
+
+  async findMine(): Promise<
+    ApiResponse<{
+      nickname: string;
+      count: number;
+      feeds: Feed[];
+    }>
+  > {
+    // TODO : Change after jwt auth complete
+    const userId = 42;
+    const user = await this.usersRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new UnauthorizedException({
+        message: '목록 조회 실패. 유효하지 않은 토큰입니다.',
+      });
+    }
+    const feeds = await this.feedsRepository.find({
+      where: { user: { id: user.id } },
+    });
+    return {
+      message: '목록 조회 성공',
+      data: {
+        nickname: user.nickname,
+        count: feeds.length,
+        feeds,
+      },
+    };
   }
 
   update(id: number, updateFeedDto: UpdateFeedDto) {

@@ -10,7 +10,7 @@ import {
 import { FeedService } from './feed.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -22,14 +22,19 @@ export class FeedController {
     return this.feedService.create(createFeedDto);
   }
 
-  @Get()
-  findAll() {
-    return this.feedService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.feedService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.feedService.findOne(+id);
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.feedService.findOne(+id);
+  // }
+
+  @Get('my')
+  findMine() {
+    return this.feedService.findMine();
   }
 
   @Patch(':id')
