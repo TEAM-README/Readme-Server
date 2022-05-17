@@ -23,22 +23,21 @@ export class UserService {
 
   async getUserByNickname(nickname: string): Promise<ApiResponse<User>> {
     const user = await this.usersRepository.findOneBy({ nickname });
-
-    let available;
+    let result;
 
     if (user) {
-      available = {
+      result = {
         available: false,
       };
     } else {
-      available = {
+      result = {
         available: true,
       };
     }
 
     return {
       message: '닉네임 중복 조회 성공',
-      data: available,
+      data: result,
     };
   }
 
