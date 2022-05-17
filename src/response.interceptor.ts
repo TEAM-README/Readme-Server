@@ -23,6 +23,8 @@ export class ResponseInterceptor<S, T>
     const status = context.switchToHttp().getResponse().statusCode;
     return next
       .handle()
-      .pipe(map(({ message, data }) => ({ status, message, data })));
+      .pipe(
+        map(({ message, data }) => ({ status, success: true, message, data })),
+      );
   }
 }
