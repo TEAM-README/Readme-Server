@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiResponse } from 'src/types/global';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,6 +19,26 @@ export class UserService {
 
   findAll() {
     return `This action returns all user`;
+  }
+
+  async getUserByNickname(nickname: string): Promise<ApiResponse<User>> {
+    const user = await this.usersRepository.findOneBy({ nickname });
+    let result;
+
+    if (user) {
+      result = {
+        available: false,
+      };
+    } else {
+      result = {
+        available: true,
+      };
+    }
+
+    return {
+      message: '닉네임 중복 조회 성공',
+      data: result,
+    };
   }
 
   async getOne(id: number): Promise<User> {
