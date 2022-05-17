@@ -31,6 +31,6 @@ export class User {
   @Column({ default: false })
   is_deleted: boolean;
 
-  @OneToMany(() => Feed, (feed) => feed.user_id)
+  @OneToMany(() => Feed, (feed) => feed.user)
   feeds: Feed[];
 }
