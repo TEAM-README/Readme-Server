@@ -6,6 +6,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
         synchronize: true,
+        namingStrategy: new SnakeNamingStrategy(),
       }),
     }),
     UserModule,
