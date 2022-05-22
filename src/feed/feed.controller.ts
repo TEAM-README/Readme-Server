@@ -6,11 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FeedService } from './feed.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -22,19 +23,15 @@ export class FeedController {
     return this.feedService.create(createFeedDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.feedService.findAll();
-  // }
+  @Get()
+  @ApiQuery({ name: 'filters', description: '분류 카테고리' })
+  findAll(@Query('filters') filters: string) {
+    return this.feedService.findAll(filters);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.feedService.findOne(+id);
-  // }
-
-  @Get('my')
-  findMine() {
-    return this.feedService.findMine();
+  @Get(':feedId')
+  findOne(@Param('feedId') feedId: string) {
+    return this.feedService.findOne(feedId);
   }
 
   @Patch(':id')
