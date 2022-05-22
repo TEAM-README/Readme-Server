@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Book } from '../../book/entities/book.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Feed {
@@ -18,14 +19,19 @@ export class Feed {
   @Column()
   categoryName: string;
 
-  @ManyToOne(() => Book, (book) => book.isbn)
+  @ManyToOne(() => Book, (book) => book.isbn, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'isbn' })
   isbn: number;
 
   @Column()
   title: string;
 
-  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.id, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -44,6 +50,7 @@ export class Feed {
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Exclude()
   updatedAt: Date;
 
   @Column({ default: false })
