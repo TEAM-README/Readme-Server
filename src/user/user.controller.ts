@@ -48,11 +48,6 @@ export class UserController {
     // @FIXME: Get user by parsing access-token
     const userId = 1;
 
-    this.userService.updateNickname(userId, updateData);
-
-    return {
-      succes: true,
-      message: '닉네임 수정 완료',
-    };
+    return this.userService.updateNickname(userId, updateData);
   }
 }
