@@ -22,6 +22,9 @@ export class Feed {
   @JoinColumn({ name: 'isbn' })
   isbn: number;
 
+  @Column()
+  title: string;
+
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
