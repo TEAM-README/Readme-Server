@@ -16,7 +16,7 @@ export class Feed {
   id: number;
 
   @Column()
-  category_name: string;
+  categoryName: string;
 
   @ManyToOne(() => Book, (book) => book.isbn)
   @JoinColumn({ name: 'isbn' })
@@ -35,14 +35,14 @@ export class Feed {
   @Column({
     default: 0,
   })
-  reported_count: number;
+  reportedCount: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ default: false })
-  is_deleted: boolean;
+  isDeleted: boolean;
 }

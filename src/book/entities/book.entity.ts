@@ -12,7 +12,7 @@ export class Book {
   isbn: number;
 
   @Column()
-  sub_isbn: number;
+  subIsbn: number;
 
   @Column()
   title: string;
@@ -24,11 +24,11 @@ export class Book {
   image: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ default: false })
-  is_deleted: boolean;
+  isDeleted: boolean;
 }
