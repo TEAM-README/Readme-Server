@@ -24,7 +24,7 @@ export class AuthService {
       const payload = {
         type: 'accessToken',
         id: user.id,
-        nickname: user.nickname,
+        nickname: nickname,
       };
       const accessToken = this.jwtService.sign(payload);
 
@@ -36,7 +36,7 @@ export class AuthService {
       };
     } else {
       throw new UnauthorizedException({
-        message: '존재하지 않는 닉네임의 유저입니다.',
+        message: '존재하지 않는 닉네임입니다.',
       });
     }
   }
