@@ -24,5 +24,5 @@ export class CreateUserDto {
     description: '리프레시 토큰',
     default: 'temporary_token',
   })
-  refresh_token: string;
+  refreshToken: string;
 }

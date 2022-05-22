@@ -30,11 +30,9 @@ export class FeedService {
   ): Promise<ApiResponse<{ id: number; createdAt: Date; updatedAt: Date }>> {
     try {
       await this.booksRepository.save(createFeedDto);
-      const {
-        id,
-        created_at: createdAt,
-        updated_at: updatedAt,
-      } = await this.feedsRepository.save(createFeedDto);
+      const { id, createdAt, updatedAt } = await this.feedsRepository.save(
+        createFeedDto,
+      );
       return {
         message: '피드 추가 성공',
         data: { id, createdAt, updatedAt },
@@ -60,7 +58,7 @@ export class FeedService {
     }>
   > {
     // TODO : Change after jwt auth complete
-    const userId = 42;
+    const userId = 1;
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new UnauthorizedException({
@@ -105,7 +103,7 @@ export class FeedService {
     }
     await this.feedsRepository.save({
       ...feed,
-      is_deleted: true,
+      isDeleted: true,
     });
     return {
       message: '피드 삭제 성공',

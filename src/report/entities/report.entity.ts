@@ -17,25 +17,25 @@ export class Report {
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'report_user_id' })
-  report_user_id: number;
+  reportUserId: number;
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'reported_user_id' })
-  reported_user_id: number;
+  reportedUserId: number;
 
   @ManyToOne(() => Feed, (feed) => feed.id)
   @JoinColumn({ name: 'reported_feed_id' })
-  reported_feed_id: number;
+  reportedFeedId: number;
 
   @Column()
   reason: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ default: false })
-  is_deleted: boolean;
+  isDeleted: boolean;
 }

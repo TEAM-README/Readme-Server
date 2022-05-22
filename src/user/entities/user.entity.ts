@@ -20,16 +20,16 @@ export class User {
   nickname: string;
 
   @Column()
-  refresh_token: string;
+  refreshToken: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ default: false })
-  is_deleted: boolean;
+  isDeleted: boolean;
 
   @OneToMany(() => Feed, (feed) => feed.user)
   feeds: Feed[];

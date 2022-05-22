@@ -8,7 +8,7 @@ export class CreateFeedDto {
     description: '카테고리 이름',
     default: '소설',
   })
-  category_name: string;
+  categoryName: string;
 
   @IsString()
   @ApiProperty({
@@ -38,7 +38,7 @@ export class CreateFeedDto {
     description: '서브 도서 고유 번호',
     default: 56789,
   })
-  sub_isbn: number;
+  subIsbn: number;
 
   @IsString()
   @ApiProperty({
@@ -68,10 +68,10 @@ export class CreateFeedDto {
       id: 1,
       uid: 'kakao@1234',
       nickname: '갓영권',
-      refresh_token: 'temporary_token',
-      created_at: '2022-05-12T22:12:35.253Z',
-      updated_at: '2022-05-14T01:11:45.480Z',
-      is_deleted: false,
+      refreshToken: 'temporary_token',
+      createdAt: '2022-05-12T22:12:35.253Z',
+      updatedAt: '2022-05-14T01:11:45.480Z',
+      isDeleted: false,
     },
   })
   user: User;
