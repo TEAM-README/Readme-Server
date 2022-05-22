@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiResponse } from 'src/types/global';
 import { Repository } from 'typeorm';
+import { Feed } from '../feed/entities/feed.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -11,14 +16,22 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Feed)
+    private feedsRepository: Repository<Feed>,
   ) {}
 
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async getOne(id: number): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (user === null) {
+      throw new NotFoundException('user not found');
+    }
+
+    return user;
   }
 
   async getUserByNickname(
@@ -39,18 +52,32 @@ export class UserService {
     };
   }
 
-  async getOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
-
-    if (user === null) {
-      throw new NotFoundException('user not found');
+  async getMyFeeds(): Promise<
+    ApiResponse<{
+      nickname: string;
+      count: number;
+      feeds: Feed[];
+    }>
+  > {
+    // @FIXME: Get user by parsing access-token
+    const userId = 1;
+    const user = await this.usersRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new UnauthorizedException({
+        message: '목록 조회 실패. 유효하지 않은 토큰입니다.',
+      });
     }
-
-    return user;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    const feeds = await this.feedsRepository.find({
+      where: { user: { id: user.id }, isDeleted: false },
+    });
+    return {
+      message: '목록 조회 성공',
+      data: {
+        nickname: user.nickname,
+        count: feeds.length,
+        feeds,
+      },
+    };
   }
 
   remove(id: number) {
