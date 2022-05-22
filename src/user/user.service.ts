@@ -21,23 +21,21 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async getUserByNickname(nickname: string): Promise<ApiResponse<User>> {
+  async getUserByNickname(
+    nickname: string,
+  ): Promise<ApiResponse<{ available: boolean }>> {
     const user = await this.usersRepository.findOneBy({ nickname });
-    let result;
+    let available;
 
     if (user) {
-      result = {
-        available: false,
-      };
+      available = false;
     } else {
-      result = {
-        available: true,
-      };
+      available = true;
     }
 
     return {
       message: '닉네임 중복 조회 성공',
-      data: result,
+      data: { available },
     };
   }
 
@@ -59,8 +57,15 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 
-  async updateNickname(userId: number, updateUserDto: UpdateUserDto) {
+  async updateNickname(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<ApiResponse> {
     const user = this.getOne(userId);
     await this.usersRepository.update(userId, { ...user, ...updateUserDto });
+
+    return {
+      message: '닉네임 수정 완료',
+    };
   }
 }
