@@ -25,7 +25,7 @@ export class Feed {
   @JoinColumn({ name: 'isbn' })
   isbn: number;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
   @ManyToOne(() => User, (user) => user.id, {
