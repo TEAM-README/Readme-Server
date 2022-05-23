@@ -23,19 +23,14 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
-  getAll() {
-    return this.userService.findAll();
-  }
-
   @Get('/nickname')
   getUserByNickname(@Query('query') nickname: string) {
     return this.userService.getUserByNickname(nickname);
   }
 
-  @Get(':id')
-  getOne(@Param('id') id: string) {
-    return this.userService.getOne(+id);
+  @Get('/myFeeds')
+  getOne() {
+    return this.userService.getMyFeeds();
   }
 
   @Delete(':id')

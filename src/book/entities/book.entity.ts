@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -9,12 +10,15 @@ import {
 @Entity()
 export class Book {
   @PrimaryColumn()
+  @Exclude()
   isbn: number;
 
   @Column()
+  @Exclude()
   subIsbn: number;
 
   @Column()
+  @Exclude()
   title: string;
 
   @Column()
@@ -24,11 +28,14 @@ export class Book {
   image: string;
 
   @CreateDateColumn()
+  @Exclude()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Exclude()
   updatedAt: Date;
 
   @Column({ default: false })
+  @Exclude()
   isDeleted: boolean;
 }
