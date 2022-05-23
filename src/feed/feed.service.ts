@@ -66,7 +66,7 @@ export class FeedService {
       });
     }
     const feeds = await this.feedsRepository.find({
-      where: { user: { id: user.id } },
+      where: { user: { id: user.id, isDeleted: false } },
     });
     return {
       message: '목록 조회 성공',
