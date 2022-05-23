@@ -21,7 +21,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
 
     const { authorization } = request.headers;
-    if (authorization === undefined) {
+    if (!authorization) {
       throw new BadRequestException({
         message: '토큰이 없습니다.',
       });
