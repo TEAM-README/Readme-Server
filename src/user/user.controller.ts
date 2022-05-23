@@ -7,20 +7,32 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('auth/access-token')
+  createAceessToken(@Body('nickname') nickname: string) {
+    return this.authService.createAccessToken(nickname);
   }
 
   @Get('/nickname')
@@ -38,11 +50,9 @@ export class UserController {
     return this.userService.remove(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch('/nickname')
-  updateNickname(@Body() updateData: UpdateUserDto) {
-    // @FIXME: Get user by parsing access-token
-    const userId = 1;
-
-    return this.userService.updateNickname(userId, updateData);
+  updateNickname(@Req() req, @Body() updateData: UpdateUserDto) {
+    return this.userService.updateNickname(req.user.id, updateData);
   }
 }
