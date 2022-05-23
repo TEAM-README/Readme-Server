@@ -36,7 +36,7 @@ export class AuthService {
       };
     } else {
       throw new UnauthorizedException({
-        message: '존재하지 않는 닉네임입니다.',
+        message: '존재하지 않는 유저입니다.',
       });
     }
   }
