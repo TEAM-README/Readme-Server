@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -14,21 +15,26 @@ export class User {
   id: number;
 
   @Column()
+  @Exclude()
   uid: string;
 
   @Column()
   nickname: string;
 
   @Column()
+  @Exclude()
   refreshToken: string;
 
   @CreateDateColumn()
+  @Exclude()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @Exclude()
   updatedAt: Date;
 
   @Column({ default: false })
+  @Exclude()
   isDeleted: boolean;
 
   @OneToMany(() => Feed, (feed) => feed.user)
