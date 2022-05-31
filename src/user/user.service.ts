@@ -80,10 +80,6 @@ export class UserService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
   async updateNickname(
     userId: number,
     updateUserDto: UpdateUserDto,
@@ -93,6 +89,14 @@ export class UserService {
 
     return {
       message: '닉네임 수정 완료',
+    };
+  }
+
+  async deleteUser(userId: number): Promise<ApiResponse> {
+    await this.usersRepository.update(userId, { isDeleted: true });
+
+    return {
+      message: '회원 탈퇴 성공',
     };
   }
 }
