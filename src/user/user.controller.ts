@@ -45,9 +45,10 @@ export class UserController {
     return this.userService.getMyFeeds();
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  remove(@Req() req) {
+    return this.userService.deleteUser(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
