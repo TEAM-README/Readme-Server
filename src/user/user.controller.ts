@@ -30,6 +30,14 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Post('/login')
+  doSocialLogin(
+    @Body('platform') platform: string,
+    @Body('socialToken') socialToken: string,
+  ) {
+    return this.userService.doSocialLogin(platform, socialToken);
+  }
+
   @Post('auth/access-token')
   createAceessToken(@Body('nickname') nickname: string) {
     return this.authService.createAccessToken(nickname);
