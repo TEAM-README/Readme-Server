@@ -31,7 +31,7 @@ export class UserController {
   }
 
   @Post('/login')
-  doSocialLogin(
+  socialLogin(
     @Body('platform') platform: string,
     @Body('socialToken') socialToken: string,
   ) {
