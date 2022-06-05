@@ -38,14 +38,22 @@ export class UserService {
       accessToken?: string;
     }>
   > {
+    let socialId: string;
+
     if (platfrom === 'KAKAO') {
       const kakaoUrl = this.configService.get('KAKAO_ME_URI');
-      const res = await firstValueFrom(
+      const data = await firstValueFrom(
         this.httpService.get(kakaoUrl, {
           headers: { Authorization: `Bearer ${socialToken}` },
         }),
-      );
-      console.log(res);
+      )
+        .then((res) => res.data)
+        .catch(() => {
+          throw new UnauthorizedException({
+            message: '소셜 로그인 실패',
+          });
+        });
+      socialId = `KAKAO@${data.id}`;
     }
 
     return {
