@@ -3,7 +3,9 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
+import { firstValueFrom } from 'rxjs';
 import { ApiResponse } from 'src/types/global';
 import { Repository } from 'typeorm';
 import { Feed } from '../feed/entities/feed.entity';
@@ -18,10 +20,38 @@ export class UserService {
     private usersRepository: Repository<User>,
     @InjectRepository(Feed)
     private feedsRepository: Repository<Feed>,
+    private readonly httpService: HttpService,
   ) {}
 
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
+  }
+
+  async doSocialLogin(
+    platfrom: string,
+    socialToken: string,
+  ): Promise<
+    ApiResponse<{
+      isNewUser: boolean;
+      accessToken?: string;
+    }>
+  > {
+    if (platfrom === 'KAKAO') {
+      const kakaoUrl = 'https://kapi.kakao.com/v2/user/me';
+      const res = await firstValueFrom(
+        this.httpService.get(kakaoUrl, {
+          headers: { Authorization: `Bearer ${socialToken}` },
+        }),
+      );
+      console.log(res);
+    }
+
+    return {
+      message: '소셜 로그인 성공',
+      data: {
+        isNewUser: true,
+      },
+    };
   }
 
   async getOne(id: number): Promise<User> {
