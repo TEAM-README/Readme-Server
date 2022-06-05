@@ -35,7 +35,7 @@ export class UserController {
     @Body('platform') platform: string,
     @Body('socialToken') socialToken: string,
   ) {
-    return this.userService.doSocialLogin(platform, socialToken);
+    return this.userService.socialLogin(platform, socialToken);
   }
 
   @Post('auth/access-token')

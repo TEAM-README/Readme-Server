@@ -32,7 +32,7 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  async doSocialLogin(
+  async socialLogin(
     platfrom: string,
     socialToken: string,
   ): Promise<
@@ -45,7 +45,7 @@ export class UserService {
 
     if (platfrom === 'KAKAO') {
       const kakaoUrl = this.configService.get('KAKAO_ME_URI');
-      const data = await firstValueFrom(
+      const result = await firstValueFrom(
         this.httpService.get(kakaoUrl, {
           headers: { Authorization: `Bearer ${socialToken}` },
         }),
@@ -56,7 +56,7 @@ export class UserService {
             message: '소셜 로그인 실패',
           });
         });
-      uid = `KAKAO@${data.id}`;
+      uid = `KAKAO@${result.id}`;
     } else if (platfrom === 'APPLE') {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
