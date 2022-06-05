@@ -44,7 +44,7 @@ export class UserService {
     let uid: string;
 
     if (platfrom === 'KAKAO') {
-      uid = await this.kakaoLogin(socialToken);
+      uid = await this.getKakaoUid(socialToken);
     } else if (platfrom === 'APPLE') {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
@@ -80,7 +80,7 @@ export class UserService {
     };
   }
 
-  async kakaoLogin(socialToken: string): Promise<string> {
+  async getKakaoUid(socialToken: string): Promise<string> {
     const kakaoUrl = this.configService.get('KAKAO_ME_URI');
     try {
       const result = await firstValueFrom(
