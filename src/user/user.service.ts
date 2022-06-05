@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -56,6 +57,13 @@ export class UserService {
           });
         });
       uid = `KAKAO@${data.id}`;
+    } else if (platfrom === 'APPLE') {
+      // @TODO:
+      // APPLE LOGIN IMPLEMENTATION
+    } else {
+      throw new BadRequestException({
+        message: '올바르지 않은 소셜 플랫폼',
+      });
     }
 
     const user = await this.usersRepository.findOneBy({ uid });
