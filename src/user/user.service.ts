@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { ApiResponse } from 'src/types/global';
@@ -20,6 +21,7 @@ export class UserService {
     private usersRepository: Repository<User>,
     @InjectRepository(Feed)
     private feedsRepository: Repository<Feed>,
+    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -37,7 +39,7 @@ export class UserService {
     }>
   > {
     if (platfrom === 'KAKAO') {
-      const kakaoUrl = 'https://kapi.kakao.com/v2/user/me';
+      const kakaoUrl = this.configService.get('KAKAO_ME_URI');
       const res = await firstValueFrom(
         this.httpService.get(kakaoUrl, {
           headers: { Authorization: `Bearer ${socialToken}` },
