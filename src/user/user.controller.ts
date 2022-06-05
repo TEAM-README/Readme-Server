@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Req,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,6 +31,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @HttpCode(200)
   @Post('/login')
   socialLogin(
     @Body('platform') platform: string,
