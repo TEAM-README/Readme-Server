@@ -13,6 +13,7 @@ import { Feed } from '../feed/entities/feed.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     private usersRepository: Repository<User>,
     @InjectRepository(Feed)
     private feedsRepository: Repository<Feed>,
+    private readonly authService: AuthService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
@@ -38,7 +40,7 @@ export class UserService {
       accessToken?: string;
     }>
   > {
-    let socialId: string;
+    let uid: string;
 
     if (platfrom === 'KAKAO') {
       const kakaoUrl = this.configService.get('KAKAO_ME_URI');
@@ -53,13 +55,31 @@ export class UserService {
             message: '소셜 로그인 실패',
           });
         });
-      socialId = `KAKAO@${data.id}`;
+      uid = `KAKAO@${data.id}`;
     }
+
+    const user = await this.usersRepository.findOneBy({ uid });
+    // new signing up user
+    if (!user) {
+      return {
+        message: '신규 사용자입니다',
+        data: {
+          isNewUser: true,
+        },
+      };
+    }
+
+    const accessTokenResponse = this.authService
+      .createAccessToken(user.nickname)
+      .then((res) => res.data);
+
+    const accessToken = (await accessTokenResponse).accessToken;
 
     return {
       message: '소셜 로그인 성공',
       data: {
-        isNewUser: true,
+        isNewUser: false,
+        accessToken,
       },
     };
   }
