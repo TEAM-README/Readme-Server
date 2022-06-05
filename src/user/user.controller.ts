@@ -50,9 +50,10 @@ export class UserController {
     return this.userService.getUserByNickname(nickname);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/myFeeds')
-  getOne() {
-    return this.userService.getMyFeeds();
+  getOne(@Req() req) {
+    return this.userService.getMyFeeds(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)

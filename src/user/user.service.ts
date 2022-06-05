@@ -124,19 +124,17 @@ export class UserService {
     };
   }
 
-  async getMyFeeds(): Promise<
+  async getMyFeeds(userId: number): Promise<
     ApiResponse<{
       nickname: string;
       count: number;
       feeds: Feed[];
     }>
   > {
-    // @FIXME: Get user by parsing access-token
-    const userId = 1;
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new UnauthorizedException({
-        message: '목록 조회 실패. 유효하지 않은 토큰입니다.',
+        message: '목록 조회 실패. 존재하지 않는 유저입니다.',
       });
     }
     const feeds = await this.feedsRepository.find({
