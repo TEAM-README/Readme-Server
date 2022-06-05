@@ -45,18 +45,18 @@ export class UserService {
 
     if (platfrom === 'KAKAO') {
       const kakaoUrl = this.configService.get('KAKAO_ME_URI');
-      const result = await firstValueFrom(
-        this.httpService.get(kakaoUrl, {
-          headers: { Authorization: `Bearer ${socialToken}` },
-        }),
-      )
-        .then((res) => res.data)
-        .catch(() => {
-          throw new UnauthorizedException({
-            message: '소셜 로그인 실패',
-          });
+      try {
+        const result = await firstValueFrom(
+          this.httpService.get(kakaoUrl, {
+            headers: { Authorization: `Bearer ${socialToken}` },
+          }),
+        );
+        uid = `KAKAO@${result.data.id}`;
+      } catch (error) {
+        throw new UnauthorizedException({
+          message: '소셜 로그인 실패',
         });
-      uid = `KAKAO@${result.id}`;
+      }
     } else if (platfrom === 'APPLE') {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
@@ -77,11 +77,11 @@ export class UserService {
       };
     }
 
-    const accessTokenResponse = this.authService
-      .createAccessToken(user.nickname)
-      .then((res) => res.data);
+    const accessTokenResponse = await this.authService.createAccessToken(
+      user.nickname,
+    );
 
-    const accessToken = (await accessTokenResponse).accessToken;
+    const accessToken = accessTokenResponse.data.accessToken;
 
     return {
       message: '소셜 로그인 성공',
