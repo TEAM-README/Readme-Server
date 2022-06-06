@@ -65,7 +65,7 @@ export class UserService {
   }
 
   async socialLogin(
-    platfrom: string,
+    platform: string,
     socialToken: string,
   ): Promise<
     ApiResponse<{
@@ -75,9 +75,9 @@ export class UserService {
   > {
     let uid: string;
 
-    if (platfrom === 'KAKAO') {
+    if (platform === 'KAKAO') {
       uid = await this.getKakaoUid(socialToken);
-    } else if (platfrom === 'APPLE') {
+    } else if (platform === 'APPLE') {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
