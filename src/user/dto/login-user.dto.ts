@@ -10,7 +10,7 @@ export class LoginUserDto {
     description: '소셜 플랫폼 종류',
     enum: PlatformEnum,
   })
-  platform: PlatformEnum;
+  platform: string;
 
   @IsString()
   @IsNotEmpty()
