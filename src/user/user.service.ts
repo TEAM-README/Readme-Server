@@ -31,7 +31,12 @@ export class UserService {
   async create(
     createUserDto: CreateUserDto,
   ): Promise<ApiResponse<{ accessToken: string }>> {
-    const { platform, socialToken, nickname } = createUserDto;
+    const {
+      platform,
+      socialToken,
+      nickname,
+    }: { platform: string; socialToken: string; nickname: string } =
+      createUserDto;
     let uid: string;
 
     if (platform === 'KAKAO') {
