@@ -14,6 +14,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { PlatformEnum } from 'src/types/platform.enum';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UserService {
