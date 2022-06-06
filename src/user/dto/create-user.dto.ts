@@ -1,28 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNumber()
-  id: number;
-
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    description: '소셜 로그인 uid',
-    default: 'kakao@1234',
+    description: '소셜 플랫폼 종류',
+    default: 'KAKAO or APPLE or NAVER',
   })
-  uid: string;
+  platform: string;
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    description: '사용자 닉네임',
-    default: 'nickname1234',
+    description: '소셜 토큰',
+    default: 'socialToken',
+  })
+  socialToken: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: '닉네임',
+    default: 'nickname',
   })
   nickname: string;
-
-  @IsString()
-  @ApiProperty({
-    description: '리프레시 토큰',
-    default: 'temporary_token',
-  })
-  refreshToken: string;
 }

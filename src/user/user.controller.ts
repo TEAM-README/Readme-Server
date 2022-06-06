@@ -26,7 +26,7 @@ export class UserController {
     private authService: AuthService,
   ) {}
 
-  @Post()
+  @Post('/signup')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

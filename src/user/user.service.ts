@@ -28,8 +28,40 @@ export class UserService {
     private readonly httpService: HttpService,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(
+    createUserDto: CreateUserDto,
+  ): Promise<ApiResponse<{ accessToken: string }>> {
+    const { platform, socialToken, nickname } = createUserDto;
+    let uid: string;
+
+    if (platform === 'KAKAO') {
+      uid = await this.getKakaoUid(socialToken);
+    } else if (platform === 'APPLE') {
+      // @TODO:
+      // APPLE LOGIN IMPLEMENTATION
+    } else {
+      throw new BadRequestException({
+        message: '올바르지 않은 소셜 플랫폼',
+      });
+    }
+
+    const user = {
+      uid,
+      nickname,
+    };
+
+    await this.usersRepository.save(user);
+
+    const accessTokenResponse = await this.authService.createAccessToken(
+      nickname,
+    );
+
+    const accessToken = accessTokenResponse.data.accessToken;
+
+    return {
+      message: '회원가입 성공',
+      data: { accessToken },
+    };
   }
 
   async socialLogin(
