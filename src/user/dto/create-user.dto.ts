@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { PlatformEnum } from 'src/types/platform.enum';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @IsEnum(PlatformEnum, { message: '올바르지 않은 소셜 플랫폼' })
   @ApiProperty({
     description: '소셜 플랫폼 종류',
-    default: 'KAKAO or APPLE or NAVER',
+    enum: PlatformEnum,
   })
   platform: string;
 
