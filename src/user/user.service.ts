@@ -69,15 +69,14 @@ export class UserService {
     };
   }
 
-  async socialLogin(
-    platform: string,
-    socialToken: string,
-  ): Promise<
+  async socialLogin(loginUserDto: LoginUserDto): Promise<
     ApiResponse<{
       isNewUser: boolean;
       accessToken?: string;
     }>
   > {
+    const { platform, socialToken }: { platform: string; socialToken: string } =
+      loginUserDto;
     let uid: string;
 
     if (platform === PlatformEnum.KAKAO) {
