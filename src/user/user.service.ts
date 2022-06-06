@@ -39,15 +39,14 @@ export class UserService {
       createUserDto;
     let uid: string;
 
-    if (platform === 'KAKAO') {
+    if (platform === PlatformEnum.KAKAO) {
       uid = await this.getKakaoUid(socialToken);
-    } else if (platform === 'APPLE') {
+    } else if (platform === PlatformEnum.APPLE) {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
-      throw new BadRequestException({
-        message: '올바르지 않은 소셜 플랫폼',
-      });
+      // @TODO:
+      // NAVER LOGIN IMPLEMENTATION
     }
 
     const user = {
@@ -80,15 +79,14 @@ export class UserService {
   > {
     let uid: string;
 
-    if (platform === 'KAKAO') {
+    if (platform === PlatformEnum.KAKAO) {
       uid = await this.getKakaoUid(socialToken);
-    } else if (platform === 'APPLE') {
+    } else if (platform === PlatformEnum.APPLE) {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
-      throw new BadRequestException({
-        message: '올바르지 않은 소셜 플랫폼',
-      });
+      // @TODO:
+      // NAVER LOGIN IMPLEMENTATION
     }
 
     const user = await this.usersRepository.findOneBy({ uid });
