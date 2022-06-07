@@ -19,16 +19,28 @@ export class FeedService {
     private usersRepository: Repository<User>,
   ) {}
   async create(
+    user: User,
     createFeedDto: CreateFeedDto,
-  ): Promise<ApiResponse<{ id: number; createdAt: Date; updatedAt: Date }>> {
+  ): Promise<ApiResponse<{ id: number; createdAt: Date }>> {
     try {
       await this.booksRepository.save(createFeedDto);
-      const { id, createdAt, updatedAt } = await this.feedsRepository.save(
-        createFeedDto,
-      );
+
+      const { categoryName, sentence, feeling, isbn, title } = createFeedDto;
+
+      const feed = {
+        categoryName,
+        sentence,
+        feeling,
+        isbn,
+        user,
+        title,
+      };
+
+      const { id, createdAt } = await this.feedsRepository.save(feed);
+
       return {
         message: '피드 추가 성공',
-        data: { id, createdAt, updatedAt },
+        data: { id, createdAt },
       };
     } catch (e) {
       console.error(e);
