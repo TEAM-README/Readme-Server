@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { PlatformEnum } from 'src/types/platform.enum';
 
-export class CreateUserDto {
+export class LoginUserDto {
   @IsString()
   @IsNotEmpty()
   @IsEnum(PlatformEnum, { message: '올바르지 않은 소셜 플랫폼' })
@@ -19,12 +19,4 @@ export class CreateUserDto {
     default: 'socialToken',
   })
   socialToken: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    description: '닉네임',
-    default: 'nickname',
-  })
-  nickname: string;
 }

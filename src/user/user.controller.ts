@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   Query,
   UseGuards,
@@ -17,6 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('user')
 @ApiTags('user')
@@ -26,18 +26,15 @@ export class UserController {
     private authService: AuthService,
   ) {}
 
-  @Post()
+  @Post('/signup')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @HttpCode(200)
   @Post('/login')
-  socialLogin(
-    @Body('platform') platform: string,
-    @Body('socialToken') socialToken: string,
-  ) {
-    return this.userService.socialLogin(platform, socialToken);
+  socialLogin(@Body() loginUserDto: LoginUserDto) {
+    return this.userService.socialLogin(loginUserDto);
   }
 
   @Post('auth/access-token')

@@ -18,10 +18,10 @@ export class User {
   @Exclude()
   uid: string;
 
-  @Column()
+  @Column({ unique: true })
   nickname: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   refreshToken: string;
 

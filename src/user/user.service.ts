@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -15,6 +14,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { PlatformEnum } from 'src/types/platform.enum';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -28,30 +29,64 @@ export class UserService {
     private readonly httpService: HttpService,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(
+    createUserDto: CreateUserDto,
+  ): Promise<ApiResponse<{ accessToken: string }>> {
+    const {
+      platform,
+      socialToken,
+      nickname,
+    }: { platform: string; socialToken: string; nickname: string } =
+      createUserDto;
+    let uid: string;
+
+    if (platform === PlatformEnum.KAKAO) {
+      uid = await this.getKakaoUid(socialToken);
+    } else if (platform === PlatformEnum.APPLE) {
+      // @TODO:
+      // APPLE LOGIN IMPLEMENTATION
+    } else {
+      // @TODO:
+      // NAVER LOGIN IMPLEMENTATION
+    }
+
+    const user = {
+      uid,
+      nickname,
+    };
+
+    await this.usersRepository.save(user);
+
+    const accessTokenResponse = await this.authService.createAccessToken(
+      nickname,
+    );
+
+    const accessToken = accessTokenResponse.data.accessToken;
+
+    return {
+      message: '회원가입 성공',
+      data: { accessToken },
+    };
   }
 
-  async socialLogin(
-    platfrom: string,
-    socialToken: string,
-  ): Promise<
+  async socialLogin(loginUserDto: LoginUserDto): Promise<
     ApiResponse<{
       isNewUser: boolean;
       accessToken?: string;
     }>
   > {
+    const { platform, socialToken }: { platform: string; socialToken: string } =
+      loginUserDto;
     let uid: string;
 
-    if (platfrom === 'KAKAO') {
+    if (platform === PlatformEnum.KAKAO) {
       uid = await this.getKakaoUid(socialToken);
-    } else if (platfrom === 'APPLE') {
+    } else if (platform === PlatformEnum.APPLE) {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
-      throw new BadRequestException({
-        message: '올바르지 않은 소셜 플랫폼',
-      });
+      // @TODO:
+      // NAVER LOGIN IMPLEMENTATION
     }
 
     const user = await this.usersRepository.findOneBy({ uid });
