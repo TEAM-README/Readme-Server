@@ -93,7 +93,7 @@ export class FeedService {
     const { author, image } = book;
 
     return {
-      message: responseMessage.READ_ONE_FEED_SUCCES,
+      message: responseMessage.READ_ONE_FEED_SUCCESS,
       data: {
         ...feed,
         author,

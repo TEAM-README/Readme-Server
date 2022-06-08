@@ -20,7 +20,7 @@ export const responseMessage = {
   DUPLICATE_NICKNAME: '중복되는 닉네임입니다. 다른 닉네임을 사용하세요.',
 
   READ_ALL_FEEDS_SUCCESS: '피드 목록 조회 성공',
-  READ_ONE_FEED_SUCCES: '피드 상세 조회 성공',
+  READ_ONE_FEED_SUCCESS: '피드 상세 조회 성공',
   CREATE_ONE_FEED_SUCCESS: '피드 등록 성공',
   DELETE_ONE_FEED_SUCCESS: '피드 삭제 성공',
   INCORRECT_FEED_ID: '올바르지 않은 feedId 입니다.',
