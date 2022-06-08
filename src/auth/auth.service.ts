@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { responseMessage } from 'src/response-message';
 import { ApiResponse } from 'src/types/global';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -29,14 +30,14 @@ export class AuthService {
       const accessToken = this.jwtService.sign(payload);
 
       return {
-        message: '토큰 발급 성공',
+        message: responseMessage.CREATE_TOKEN_SUCCESS,
         data: {
           accessToken: accessToken,
         },
       };
     } else {
       throw new UnauthorizedException({
-        message: '존재하지 않는 유저입니다.',
+        message: responseMessage.NO_USER,
       });
     }
   }
