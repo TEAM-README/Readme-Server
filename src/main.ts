@@ -9,6 +9,14 @@ async function bootstrap() {
     .setTitle('Readme API')
     .setDescription('리드미 API 문서')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Token',
+      },
+      'accessToken',
+    )
     .build();
   app.useGlobalPipes(
     new ValidationPipe({

@@ -13,9 +13,10 @@ import {
 import { FeedService } from './feed.service';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
+@ApiBearerAuth('accessToken')
 @UseGuards(JwtAuthGuard)
 @Controller('feed')
 @ApiTags('feed')
