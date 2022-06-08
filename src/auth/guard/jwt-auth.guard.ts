@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { responseMessage } from 'src/response-message';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../auth.service';
 
@@ -23,7 +24,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const { authorization } = request.headers;
     if (!authorization) {
       throw new BadRequestException({
-        message: '토큰이 없습니다.',
+        message: responseMessage.TOKEN_EMPTY,
       });
     }
 
@@ -46,23 +47,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       switch (error.message) {
         case 'invalid token':
           throw new BadRequestException({
-            message: '유효하지 않은 토큰입니다.',
+            message: responseMessage.TOKEN_INVALID,
           });
 
         case 'invalid signature':
           throw new BadRequestException({
-            message: '유효하지 않은 토큰입니다.',
+            message: responseMessage.TOKEN_INVALID,
           });
 
         case 'jwt expired':
           throw new BadRequestException({
-            message: '토큰이 만료되었습니다.',
+            message: responseMessage.TOKEN_EXPIRED,
           });
 
         default:
           throw new HttpException(
             {
-              message: '서버 내부 오류.',
+              message: responseMessage.VERIFY_TOKEN_FAIL,
             },
             HttpStatus.INTERNAL_SERVER_ERROR,
           );

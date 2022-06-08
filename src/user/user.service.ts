@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -16,6 +18,7 @@ import { User } from './entities/user.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { PlatformEnum } from 'src/types/platform.enum';
 import { LoginUserDto } from './dto/login-user.dto';
+import { responseMessage } from 'src/response-message';
 
 @Injectable()
 export class UserService {
@@ -50,6 +53,14 @@ export class UserService {
       // NAVER LOGIN IMPLEMENTATION
     }
 
+    const existingUser = await this.usersRepository.findOneBy({ nickname });
+    if (existingUser) {
+      throw new HttpException(
+        { message: responseMessage.DUPLICATE_NICKNAME },
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const user = {
       uid,
       nickname,
@@ -64,7 +75,7 @@ export class UserService {
     const accessToken = accessTokenResponse.data.accessToken;
 
     return {
-      message: '회원가입 성공',
+      message: responseMessage.CREATE_USER,
       data: { accessToken },
     };
   }
@@ -93,7 +104,7 @@ export class UserService {
     // new signing up user
     if (!user) {
       return {
-        message: '신규 사용자입니다',
+        message: responseMessage.NEW_USER,
         data: {
           isNewUser: true,
         },
@@ -107,7 +118,7 @@ export class UserService {
     const accessToken = accessTokenResponse.data.accessToken;
 
     return {
-      message: '소셜 로그인 성공',
+      message: responseMessage.SOCIAL_LOGIN_SUCCESS,
       data: {
         isNewUser: false,
         accessToken,
@@ -126,7 +137,7 @@ export class UserService {
       return `KAKAO@${result.data.id}`;
     } catch (error) {
       throw new UnauthorizedException({
-        message: '소셜 로그인 실패',
+        message: responseMessage.SOCIAL_LOGIN_FAIL,
       });
     }
   }
@@ -135,7 +146,9 @@ export class UserService {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (user === null) {
-      throw new NotFoundException('user not found');
+      throw new NotFoundException({
+        message: responseMessage.NO_USER,
+      });
     }
 
     return user;
@@ -154,7 +167,7 @@ export class UserService {
     }
 
     return {
-      message: '닉네임 중복 조회 성공',
+      message: responseMessage.READ_NICKNAME_SUCCESS,
       data: { available },
     };
   }
@@ -169,14 +182,14 @@ export class UserService {
     const user = await this.usersRepository.findOneBy({ id: userId });
     if (!user) {
       throw new UnauthorizedException({
-        message: '목록 조회 실패. 존재하지 않는 유저입니다.',
+        message: responseMessage.NO_USER,
       });
     }
     const feeds = await this.feedsRepository.find({
       where: { user: { id: user.id }, isDeleted: false },
     });
     return {
-      message: '목록 조회 성공',
+      message: responseMessage.READ_ALL_FEEDS_SUCCESS,
       data: {
         nickname: user.nickname,
         count: feeds.length,
@@ -193,7 +206,7 @@ export class UserService {
     await this.usersRepository.update(userId, { ...user, ...updateUserDto });
 
     return {
-      message: '닉네임 수정 완료',
+      message: responseMessage.UPDATE_NICKNAME_SUCCESS,
     };
   }
 
@@ -204,13 +217,13 @@ export class UserService {
     });
     if (!user) {
       throw new NotFoundException({
-        message: '존재하지 않는 회원입니다.',
+        message: responseMessage.NO_USER,
       });
     }
     await this.usersRepository.update(userId, { isDeleted: true });
 
     return {
-      message: '회원 탈퇴 성공',
+      message: responseMessage.DELETE_USER,
     };
   }
 }
