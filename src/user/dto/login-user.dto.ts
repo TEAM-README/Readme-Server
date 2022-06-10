@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { responseMessage } from 'src/response-message';
+import { responseMessage } from 'src/constants/response-message';
 import { PlatformEnum } from 'src/types/platform.enum';
 
 export class LoginUserDto {

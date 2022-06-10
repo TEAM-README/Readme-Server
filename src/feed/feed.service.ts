@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { responseMessage } from 'src/response-message';
+import { responseMessage } from 'src/constants/response-message';
 import { In, Repository } from 'typeorm';
 import { Book } from '../book/entities/book.entity';
 import { ApiResponse } from '../types/global';

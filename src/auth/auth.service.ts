@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { responseMessage } from 'src/response-message';
+import { responseMessage } from 'src/constants/response-message';
 import { ApiResponse } from 'src/types/global';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';

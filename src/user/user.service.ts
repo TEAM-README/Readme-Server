@@ -18,7 +18,7 @@ import { User } from './entities/user.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { PlatformEnum } from 'src/types/platform.enum';
 import { LoginUserDto } from './dto/login-user.dto';
-import { responseMessage } from 'src/response-message';
+import { responseMessage } from 'src/constants/response-message';
 
 @Injectable()
 export class UserService {

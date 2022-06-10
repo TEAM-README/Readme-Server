@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { responseMessage } from 'src/response-message';
+import { responseMessage } from 'src/constants/response-message';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../auth.service';
 
