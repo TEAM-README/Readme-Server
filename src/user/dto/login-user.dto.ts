@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { responseMessage } from 'src/constants/response-message';
 import { PlatformEnum } from 'src/types/platform.enum';
 
 export class LoginUserDto {
   @IsString()
   @IsNotEmpty()
-  @IsEnum(PlatformEnum, { message: '올바르지 않은 소셜 플랫폼' })
+  @IsEnum(PlatformEnum, { message: responseMessage.INCORRECT_PLATFORM })
   @ApiProperty({
     description: '소셜 플랫폼 종류',
     enum: PlatformEnum,

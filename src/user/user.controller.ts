@@ -13,7 +13,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -47,18 +47,21 @@ export class UserController {
     return this.userService.getUserByNickname(nickname);
   }
 
+  @ApiBearerAuth('accessToken')
   @UseGuards(JwtAuthGuard)
   @Get('/myFeeds')
   getOne(@Req() req) {
     return this.userService.getMyFeeds(req.user.id);
   }
 
+  @ApiBearerAuth('accessToken')
   @UseGuards(JwtAuthGuard)
   @Delete()
   remove(@Req() req) {
     return this.userService.deleteUser(req.user.id);
   }
 
+  @ApiBearerAuth('accessToken')
   @UseGuards(JwtAuthGuard)
   @Patch('/nickname')
   updateNickname(@Req() req, @Body() updateData: UpdateUserDto) {

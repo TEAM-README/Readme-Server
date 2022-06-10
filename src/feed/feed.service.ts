@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { responseMessage } from 'src/constants/response-message';
 import { In, Repository } from 'typeorm';
 import { Book } from '../book/entities/book.entity';
 import { ApiResponse } from '../types/global';
@@ -39,7 +40,7 @@ export class FeedService {
       const { id, createdAt } = await this.feedsRepository.save(feed);
 
       return {
-        message: '피드 추가 성공',
+        message: responseMessage.CREATE_ONE_FEED_SUCCESS,
         data: { id, createdAt },
       };
     } catch (e) {
@@ -55,7 +56,7 @@ export class FeedService {
     });
 
     return {
-      message: '피드 목록 조회 성공',
+      message: responseMessage.READ_ALL_FEEDS_SUCCESS,
       data: feeds,
     };
   }
@@ -64,7 +65,7 @@ export class FeedService {
     if (!+feedId) {
       throw new HttpException(
         {
-          message: '피드 상세 조회 실패. feedId 값을 확인하세요.',
+          message: responseMessage.INCORRECT_FEED_ID,
           data: feedId,
         },
         HttpStatus.BAD_REQUEST,
@@ -74,7 +75,7 @@ export class FeedService {
     if (!feed || feed.isDeleted) {
       throw new HttpException(
         {
-          message: '피드 상세 조회 실패. 피드가 없습니다.',
+          message: responseMessage.NO_FEED,
         },
         HttpStatus.NOT_FOUND,
       );
@@ -84,7 +85,7 @@ export class FeedService {
     if (!book || book.isDeleted) {
       throw new HttpException(
         {
-          message: '피드 상세 조회 실패. 책 정보가 없습니다.',
+          message: responseMessage.NO_BOOK,
         },
         HttpStatus.NOT_FOUND,
       );
@@ -92,7 +93,7 @@ export class FeedService {
     const { author, image } = book;
 
     return {
-      message: '피드 상세 조회 성공',
+      message: responseMessage.READ_ONE_FEED_SUCCESS,
       data: {
         ...feed,
         author,
@@ -109,7 +110,7 @@ export class FeedService {
     if (!+feedId) {
       throw new HttpException(
         {
-          message: '피드 삭제 실패. feedId 값을 확인하세요.',
+          message: responseMessage.INCORRECT_FEED_ID,
           data: feedId,
         },
         HttpStatus.BAD_REQUEST,
@@ -119,7 +120,7 @@ export class FeedService {
     if (!feed) {
       throw new HttpException(
         {
-          message: '피드 삭제 실패. 피드가 없습니다.',
+          message: responseMessage.NO_FEED,
         },
         HttpStatus.NOT_FOUND,
       );
@@ -129,7 +130,7 @@ export class FeedService {
       isDeleted: true,
     });
     return {
-      message: '피드 삭제 성공',
+      message: responseMessage.DELETE_ONE_FEED_SUCCESS,
     };
   }
 }
