@@ -13,7 +13,12 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -37,8 +42,10 @@ export class UserController {
     return this.userService.socialLogin(loginUserDto);
   }
 
+  @ApiOperation({ summary: '토큰 발급용 임시 url' })
+  @ApiQuery({ name: 'nickname', description: '유저 닉네임' })
   @Post('auth/access-token')
-  createAceessToken(@Body('nickname') nickname: string) {
+  createAceessToken(@Query('nickname') nickname: string) {
     return this.authService.createAccessToken(nickname);
   }
 
