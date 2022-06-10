@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsObject, IsString } from 'class-validator';
-import { User } from '../../user/entities/user.entity';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateFeedDto {
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '카테고리 이름',
@@ -10,6 +10,7 @@ export class CreateFeedDto {
   })
   categoryName: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '인상 깊은 문장',
@@ -18,6 +19,7 @@ export class CreateFeedDto {
   })
   sentence: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '느낀점',
@@ -26,6 +28,7 @@ export class CreateFeedDto {
   })
   feeling: string;
 
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
     description: '도서 고유 번호',
@@ -33,6 +36,7 @@ export class CreateFeedDto {
   })
   isbn: number;
 
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
     description: '서브 도서 고유 번호',
@@ -40,6 +44,7 @@ export class CreateFeedDto {
   })
   subIsbn: number;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '도서 제목',
@@ -47,6 +52,7 @@ export class CreateFeedDto {
   })
   title: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '저자',
@@ -54,25 +60,11 @@ export class CreateFeedDto {
   })
   author: string;
 
+  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '썸네일 이미지 url',
     default: 'image',
   })
   image: string;
-
-  @IsObject()
-  @ApiProperty({
-    description: '사용자 정보',
-    default: {
-      id: 1,
-      uid: 'kakao@1234',
-      nickname: '갓영권',
-      refreshToken: 'temporary_token',
-      createdAt: '2022-05-12T22:12:35.253Z',
-      updatedAt: '2022-05-14T01:11:45.480Z',
-      isDeleted: false,
-    },
-  })
-  user: User;
 }
