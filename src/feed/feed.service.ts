@@ -48,7 +48,9 @@ export class FeedService {
     }
   }
 
-  async findAll(filters: string): Promise<ApiResponse<Feed[]>> {
+  async findAll(
+    filters: string,
+  ): Promise<ApiResponse<{ filters: string[]; feeds: Feed[] }>> {
     const filterArr = filters.split(',');
 
     const feeds = await this.feedsRepository.find({
@@ -57,7 +59,10 @@ export class FeedService {
 
     return {
       message: responseMessage.READ_ALL_FEEDS_SUCCESS,
-      data: feeds,
+      data: {
+        filters: filterArr,
+        feeds: feeds,
+      },
     };
   }
 
