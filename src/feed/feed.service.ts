@@ -48,16 +48,28 @@ export class FeedService {
     }
   }
 
-  async findAll(filters: string): Promise<ApiResponse<Feed[]>> {
+  async findAll(
+    filters: string,
+  ): Promise<ApiResponse<{ filters: string[]; feeds: Feed[] }>> {
     const filterArr = filters.split(',');
 
-    const feeds = await this.feedsRepository.find({
-      where: { isDeleted: false, categoryName: In(filterArr) },
-    });
+    let feeds: Feed[];
 
+    if (!filters) {
+      feeds = await this.feedsRepository.find({
+        where: { isDeleted: false },
+      });
+    } else {
+      feeds = await this.feedsRepository.find({
+        where: { isDeleted: false, categoryName: In(filterArr) },
+      });
+    }
     return {
       message: responseMessage.READ_ALL_FEEDS_SUCCESS,
-      data: feeds,
+      data: {
+        filters: filterArr,
+        feeds: feeds,
+      },
     };
   }
 

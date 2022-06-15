@@ -13,7 +13,7 @@ export class Book {
   @Exclude()
   isbn: number;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   subIsbn: number;
 
