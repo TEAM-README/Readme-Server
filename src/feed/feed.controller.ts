@@ -29,7 +29,7 @@ export class FeedController {
   }
 
   @Get()
-  @ApiQuery({ name: 'filters', description: '분류 카테고리' })
+  @ApiQuery({ name: 'filters', description: '분류 카테고리', required: false })
   findAll(@Query('filters') filters: string) {
     return this.feedService.findAll(filters);
   }
