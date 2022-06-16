@@ -23,9 +23,9 @@ export class Feed {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'isbn' })
-  isbn: number;
+  isbn: string;
 
-  @Column({ nullable: true })
+  @Column()
   title: string;
 
   @ManyToOne(() => User, (user) => user.id, {
