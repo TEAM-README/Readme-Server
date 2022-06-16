@@ -51,15 +51,16 @@ export class FeedService {
   async findAll(
     filters: string,
   ): Promise<ApiResponse<{ filters: string[]; feeds: Feed[] }>> {
-    const filterArr = filters.split(',');
-
+    let filterArr: string[];
     let feeds: Feed[];
 
     if (!filters) {
+      filterArr = [''];
       feeds = await this.feedsRepository.find({
         where: { isDeleted: false },
       });
     } else {
+      filterArr = filters.split(',');
       feeds = await this.feedsRepository.find({
         where: { isDeleted: false, categoryName: In(filterArr) },
       });
