@@ -11,11 +11,11 @@ import {
 export class Book {
   @PrimaryColumn()
   @Exclude()
-  isbn: number;
+  isbn: string;
 
-  @Column({ nullable: true })
+  @Column()
   @Exclude()
-  subIsbn: number;
+  subIsbn: string;
 
   @Column()
   @Exclude()
