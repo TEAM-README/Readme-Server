@@ -19,7 +19,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: 60 * 60, //토큰 유지 시간: 한 시간
+          expiresIn: 60 * 60 * 24 * 30,
         },
       }),
     }),
