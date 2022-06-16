@@ -58,11 +58,13 @@ export class FeedService {
       filterArr = [''];
       feeds = await this.feedsRepository.find({
         where: { isDeleted: false },
+        order: { createdAt: 'DESC' },
       });
     } else {
       filterArr = filters.split(',');
       feeds = await this.feedsRepository.find({
         where: { isDeleted: false, categoryName: In(filterArr) },
+        order: { createdAt: 'DESC' },
       });
     }
     return {

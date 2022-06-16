@@ -187,6 +187,7 @@ export class UserService {
     }
     const feeds = await this.feedsRepository.find({
       where: { user: { id: user.id }, isDeleted: false },
+      order: { createdAt: 'DESC' },
     });
     return {
       message: responseMessage.READ_ALL_FEEDS_SUCCESS,
