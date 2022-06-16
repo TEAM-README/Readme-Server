@@ -60,7 +60,6 @@ export class CreateFeedDto {
   })
   author: string;
 
-  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '썸네일 이미지 url',
