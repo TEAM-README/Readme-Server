@@ -46,19 +46,28 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     } catch (error) {
       switch (error.message) {
         case 'invalid token':
-          throw new BadRequestException({
-            message: responseMessage.TOKEN_INVALID,
-          });
+          throw new HttpException(
+            {
+              message: responseMessage.TOKEN_INVALID,
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
 
         case 'invalid signature':
-          throw new BadRequestException({
-            message: responseMessage.TOKEN_INVALID,
-          });
+          throw new HttpException(
+            {
+              message: responseMessage.TOKEN_INVALID,
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
 
         case 'jwt expired':
-          throw new BadRequestException({
-            message: responseMessage.TOKEN_EXPIRED,
-          });
+          throw new HttpException(
+            {
+              message: responseMessage.TOKEN_EXPIRED,
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
 
         default:
           throw new HttpException(
