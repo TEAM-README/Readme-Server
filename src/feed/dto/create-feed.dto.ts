@@ -29,20 +29,20 @@ export class CreateFeedDto {
   feeling: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     description: '도서 고유 번호',
-    default: 1234,
+    default: '1234',
   })
-  isbn: number;
+  isbn: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     description: '서브 도서 고유 번호',
-    default: 56789,
+    default: '56789',
   })
-  subIsbn: number;
+  subIsbn: string;
 
   @IsNotEmpty()
   @IsString()
@@ -60,7 +60,6 @@ export class CreateFeedDto {
   })
   author: string;
 
-  @IsNotEmpty()
   @IsString()
   @ApiProperty({
     description: '썸네일 이미지 url',
