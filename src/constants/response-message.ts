@@ -26,4 +26,5 @@ export const responseMessage = {
   INCORRECT_FEED_ID: '올바르지 않은 feedId 입니다.',
   NO_FEED: '존재하지 않는 피드입니다.',
   NO_BOOK: '피드 상세 조회 실패. 책 정보가 없습니다.',
+  READ_RECENT_BOOKS_SUCCESS: '최근에 읽은 책 조회 성공',
 };
