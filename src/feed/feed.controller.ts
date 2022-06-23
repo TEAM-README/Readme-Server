@@ -34,6 +34,11 @@ export class FeedController {
     return this.feedService.findAll(filters);
   }
 
+  @Get('/recent')
+  findRecent(@Req() req) {
+    return this.feedService.findRecent(req.user);
+  }
+
   @Get(':feedId')
   findOne(@Param('feedId') feedId: string) {
     return this.feedService.findOne(feedId);
