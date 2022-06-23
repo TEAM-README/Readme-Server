@@ -23,7 +23,7 @@ export class Feed {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'isbn' })
-  isbn: string;
+  book: Book;
 
   @Column()
   title: string;
