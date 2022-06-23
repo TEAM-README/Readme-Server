@@ -5,7 +5,9 @@ import {
   Entity,
   PrimaryColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Feed } from '../../feed/entities/feed.entity';
 
 @Entity()
 export class Book {
@@ -38,4 +40,7 @@ export class Book {
   @Column({ default: false })
   @Exclude()
   isDeleted: boolean;
+
+  @OneToMany(() => Feed, (feed) => feed.book)
+  feeds: Feed[];
 }
