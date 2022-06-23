@@ -76,7 +76,7 @@ export class FeedService {
     };
   }
 
-  async findOne(feedId: string) {
+  async findOne(feedId: string): Promise<ApiResponse<{ feed: Feed }>> {
     if (!+feedId) {
       throw new HttpException(
         {
@@ -95,24 +95,23 @@ export class FeedService {
         HttpStatus.NOT_FOUND,
       );
     }
+    // console.log(feed) 하면 feed.isbn이 출력되지 않음
 
-    const book = await this.booksRepository.findOneBy({ isbn: feed.isbn });
-    if (!book || book.isDeleted) {
-      throw new HttpException(
-        {
-          message: responseMessage.NO_BOOK,
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    const { author, image } = book;
+    // const book = await this.booksRepository.findOneBy({ isbn: feed.isbn });
+    // if (!book || book.isDeleted) {
+    //   throw new HttpException(
+    //     {
+    //       message: responseMessage.NO_BOOK,
+    //     },
+    //     HttpStatus.NOT_FOUND,
+    //   );
+    // }
 
     return {
       message: responseMessage.READ_ONE_FEED_SUCCESS,
       data: {
-        ...feed,
-        author,
-        image,
+        feed: feed,
+        // book: book,
       },
     };
   }
