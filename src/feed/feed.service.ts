@@ -148,4 +148,21 @@ export class FeedService {
       message: responseMessage.DELETE_ONE_FEED_SUCCESS,
     };
   }
+
+  async findRecent(user: User): Promise<ApiResponse<{ feeds: Feed[] }>> {
+    const theUser = {
+      id: user.id,
+      nickname: user.nickname,
+    };
+    const recentBooks = await this.feedsRepository.find({
+      where: { isDeleted: false, user: theUser },
+      order: { createdAt: 'DESC' },
+    });
+    return {
+      message: responseMessage.READ_ALL_FEEDS_SUCCESS,
+      data: {
+        feeds: recentBooks,
+      },
+    };
+  }
 }
