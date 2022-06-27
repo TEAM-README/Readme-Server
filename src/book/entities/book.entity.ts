@@ -1,8 +1,10 @@
 import { Exclude } from 'class-transformer';
+import { Feed } from 'src/feed/entities/feed.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -18,7 +20,6 @@ export class Book {
   subIsbn: string;
 
   @Column()
-  @Exclude()
   title: string;
 
   @Column()
@@ -38,4 +39,7 @@ export class Book {
   @Column({ default: false })
   @Exclude()
   isDeleted: boolean;
+
+  @OneToMany(() => Feed, (feed) => feed.book)
+  feeds: Feed[];
 }

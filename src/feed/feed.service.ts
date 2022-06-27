@@ -24,20 +24,12 @@ export class FeedService {
     createFeedDto: CreateFeedDto,
   ): Promise<ApiResponse<{ id: number; createdAt: Date }>> {
     try {
-      await this.booksRepository.save(createFeedDto);
+      await this.booksRepository.save(createFeedDto.book);
 
-      const { categoryName, sentence, feeling, isbn, title } = createFeedDto;
-
-      const feed = {
-        categoryName,
-        sentence,
-        feeling,
-        isbn,
+      const { id, createdAt } = await this.feedsRepository.save({
+        ...createFeedDto,
         user,
-        title,
-      };
-
-      const { id, createdAt } = await this.feedsRepository.save(feed);
+      });
 
       return {
         message: responseMessage.CREATE_ONE_FEED_SUCCESS,
@@ -67,6 +59,7 @@ export class FeedService {
         order: { createdAt: 'DESC' },
       });
     }
+
     return {
       message: responseMessage.READ_ALL_FEEDS_SUCCESS,
       data: {
@@ -76,7 +69,7 @@ export class FeedService {
     };
   }
 
-  async findOne(feedId: string) {
+  async findOne(feedId: string): Promise<ApiResponse<{ feed: Feed }>> {
     if (!+feedId) {
       throw new HttpException(
         {
@@ -96,23 +89,10 @@ export class FeedService {
       );
     }
 
-    const book = await this.booksRepository.findOneBy({ isbn: feed.isbn });
-    if (!book || book.isDeleted) {
-      throw new HttpException(
-        {
-          message: responseMessage.NO_BOOK,
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    const { author, image } = book;
-
     return {
       message: responseMessage.READ_ONE_FEED_SUCCESS,
       data: {
-        ...feed,
-        author,
-        image,
+        feed,
       },
     };
   }
