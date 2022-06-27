@@ -125,7 +125,7 @@ export class UserService {
   }
 
   async getKakaoUid(socialToken: string): Promise<string> {
-    const kakaoUrl = this.configService.get('KAKAO_ME_URI');
+    const kakaoUrl = 'https://kapi.kakao.com/v2/user/me';
     try {
       const result = await firstValueFrom(
         this.httpService.get(kakaoUrl, {
@@ -141,7 +141,7 @@ export class UserService {
   }
 
   async getNaverUid(socialToken: string): Promise<string> {
-    const naverUrl = this.configService.get<string>('NAVER_ME_URI');
+    const naverUrl = 'https://openapi.naver.com/v1/nid/me';
     try {
       const result = await firstValueFrom(
         this.httpService.get(naverUrl, {
