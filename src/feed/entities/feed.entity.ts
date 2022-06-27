@@ -21,12 +21,10 @@ export class Feed {
 
   @ManyToOne(() => Book, (book) => book.isbn, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn({ name: 'isbn' })
-  isbn: string;
-
-  @Column()
-  title: string;
+  book: Book;
 
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
