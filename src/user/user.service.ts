@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { ApiResponse } from 'src/types/global';
@@ -28,7 +27,6 @@ export class UserService {
     @InjectRepository(Feed)
     private feedsRepository: Repository<Feed>,
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
 
