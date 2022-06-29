@@ -82,6 +82,7 @@ export class UserService {
   async socialLogin(loginUserDto: LoginUserDto): Promise<
     ApiResponse<{
       isNewUser: boolean;
+      nickname?: string;
       accessToken?: string;
     }>
   > {
@@ -119,6 +120,7 @@ export class UserService {
       message: responseMessage.SOCIAL_LOGIN_SUCCESS,
       data: {
         isNewUser: false,
+        nickname: user.nickname,
         accessToken,
       },
     };
