@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { ApiResponse } from 'src/types/global';
@@ -28,7 +27,6 @@ export class UserService {
     @InjectRepository(Feed)
     private feedsRepository: Repository<Feed>,
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -49,8 +47,7 @@ export class UserService {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
-      // @TODO:
-      // NAVER LOGIN IMPLEMENTATION
+      uid = await this.getNaverUid(socialToken);
     }
 
     const existingUser = await this.usersRepository.findOneBy({ nickname });
@@ -83,6 +80,7 @@ export class UserService {
   async socialLogin(loginUserDto: LoginUserDto): Promise<
     ApiResponse<{
       isNewUser: boolean;
+      nickname?: string;
       accessToken?: string;
     }>
   > {
@@ -96,8 +94,7 @@ export class UserService {
       // @TODO:
       // APPLE LOGIN IMPLEMENTATION
     } else {
-      // @TODO:
-      // NAVER LOGIN IMPLEMENTATION
+      uid = await this.getNaverUid(socialToken);
     }
 
     const user = await this.usersRepository.findOneBy({ uid });
@@ -121,13 +118,14 @@ export class UserService {
       message: responseMessage.SOCIAL_LOGIN_SUCCESS,
       data: {
         isNewUser: false,
+        nickname: user.nickname,
         accessToken,
       },
     };
   }
 
   async getKakaoUid(socialToken: string): Promise<string> {
-    const kakaoUrl = this.configService.get('KAKAO_ME_URI');
+    const kakaoUrl = 'https://kapi.kakao.com/v2/user/me';
     try {
       const result = await firstValueFrom(
         this.httpService.get(kakaoUrl, {
@@ -135,6 +133,22 @@ export class UserService {
         }),
       );
       return `KAKAO@${result.data.id}`;
+    } catch (error) {
+      throw new UnauthorizedException({
+        message: responseMessage.SOCIAL_LOGIN_FAIL,
+      });
+    }
+  }
+
+  async getNaverUid(socialToken: string): Promise<string> {
+    const naverUrl = 'https://openapi.naver.com/v1/nid/me';
+    try {
+      const result = await firstValueFrom(
+        this.httpService.get(naverUrl, {
+          headers: { Authorization: `Bearer ${socialToken}` },
+        }),
+      );
+      return `NAVER@${result.data.response.id}`;
     } catch (error) {
       throw new UnauthorizedException({
         message: responseMessage.SOCIAL_LOGIN_FAIL,

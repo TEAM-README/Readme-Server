@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Book } from 'src/book/entities/book.entity';
+import { CreateBookDto } from 'src/book/dto/create-book.dto';
 
 export class CreateFeedDto {
   @IsNotEmpty()
@@ -29,41 +37,18 @@ export class CreateFeedDto {
   feeling: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsObject()
+  @ValidateNested({ each: true })
+  @Type(() => CreateBookDto)
   @ApiProperty({
-    description: '도서 고유 번호',
-    default: '1234',
+    type: Book,
+    default: {
+      isbn: '1234',
+      subIsbn: '56789',
+      title: '눈사람 자살사건',
+      author: 'NUNU',
+      image: 'image',
+    },
   })
-  isbn: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: '서브 도서 고유 번호',
-    default: '56789',
-  })
-  subIsbn: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: '도서 제목',
-    default: '눈사람 자살사건',
-  })
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: '저자',
-    default: 'NUNU',
-  })
-  author: string;
-
-  @IsString()
-  @ApiProperty({
-    description: '썸네일 이미지 url',
-    default: 'image',
-  })
-  image: string;
+  book: Book;
 }
