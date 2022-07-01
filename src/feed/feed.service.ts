@@ -128,4 +128,22 @@ export class FeedService {
       message: responseMessage.DELETE_ONE_FEED_SUCCESS,
     };
   }
+
+  async findRecentBook(user: User): Promise<ApiResponse<{ books: Book[] }>> {
+    const theUser = {
+      id: user.id,
+    };
+    const myFeeds = await this.feedsRepository.find({
+      where: { isDeleted: false, user: theUser },
+      order: { createdAt: 'DESC' },
+    });
+    const duplicatedBooks = myFeeds.map((row) => row.book);
+    const books = [...new Set(duplicatedBooks)];
+    return {
+      message: responseMessage.READ_RECENT_BOOKS_SUCCESS,
+      data: {
+        books: books,
+      },
+    };
+  }
 }

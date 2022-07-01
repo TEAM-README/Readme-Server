@@ -12,11 +12,9 @@ import {
 @Entity()
 export class Book {
   @PrimaryColumn()
-  @Exclude()
   isbn: string;
 
   @Column()
-  @Exclude()
   subIsbn: string;
 
   @Column()
