@@ -35,8 +35,8 @@ export class FeedController {
   }
 
   @Get('/recent')
-  findRecent(@Req() req) {
-    return this.feedService.findRecent(req.user);
+  findRecentBook(@Req() req) {
+    return this.feedService.findRecentBook(req.user);
   }
 
   @Get(':feedId')
