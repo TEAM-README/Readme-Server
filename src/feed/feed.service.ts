@@ -129,19 +129,20 @@ export class FeedService {
     };
   }
 
-  async findRecent(user: User): Promise<ApiResponse<{ feeds: Feed[] }>> {
+  async findRecentBook(user: User): Promise<ApiResponse<{ books: Book[] }>> {
     const theUser = {
       id: user.id,
-      nickname: user.nickname,
     };
-    const recentBooks = await this.feedsRepository.find({
+    const myFeeds = await this.feedsRepository.find({
       where: { isDeleted: false, user: theUser },
       order: { createdAt: 'DESC' },
     });
+    const duplicatedBooks = myFeeds.map((row) => row.book);
+    const books = [...new Set(duplicatedBooks)];
     return {
-      message: responseMessage.READ_ALL_FEEDS_SUCCESS,
+      message: responseMessage.READ_RECENT_BOOKS_SUCCESS,
       data: {
-        feeds: recentBooks,
+        books: books,
       },
     };
   }
