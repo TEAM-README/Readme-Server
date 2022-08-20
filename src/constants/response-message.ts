@@ -12,6 +12,8 @@ export const responseMessage = {
   SOCIAL_LOGIN_SUCCESS: '소셜 로그인 성공',
   SOCIAL_LOGIN_FAIL: '소셜 로그인 실패',
   INCORRECT_PLATFORM: '올바르지 않은 소셜 플랫폼입니다.',
+  APPLE_GET_PUBLIC_KEY_FAIL: 'APPLE PUBLIC KEY를 얻을 수 없습니다.',
+  APPLE_GET_SIGNING_KEY_FAIL: 'APPLE SIGNING KEY를 얻을 수 없습니다.',
 
   NO_USER: '존재하지 않는 유저입니다.',
 

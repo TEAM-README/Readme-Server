@@ -18,6 +18,12 @@ import { AuthService } from 'src/auth/auth.service';
 import { PlatformEnum } from 'src/types/platform.enum';
 import { LoginUserDto } from './dto/login-user.dto';
 import { responseMessage } from 'src/constants/response-message';
+import jwtDecode, { JwtHeader } from 'jwt-decode';
+import * as jwksRsa from 'jwks-rsa';
+import * as jwt from 'jsonwebtoken';
+import { AppleAuthKeysResponse } from 'src/types/apple-auth-keys-response.type';
+import { AppleJwtPayload } from 'src/types/apple-jwt-payload.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -28,6 +34,7 @@ export class UserService {
     private feedsRepository: Repository<Feed>,
     private readonly authService: AuthService,
     private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(
@@ -44,8 +51,7 @@ export class UserService {
     if (platform === PlatformEnum.KAKAO) {
       uid = await this.getKakaoUid(socialToken);
     } else if (platform === PlatformEnum.APPLE) {
-      // @TODO:
-      // APPLE LOGIN IMPLEMENTATION
+      uid = await this.getAppleUid(socialToken);
     } else {
       uid = await this.getNaverUid(socialToken);
     }
@@ -91,8 +97,7 @@ export class UserService {
     if (platform === PlatformEnum.KAKAO) {
       uid = await this.getKakaoUid(socialToken);
     } else if (platform === PlatformEnum.APPLE) {
-      // @TODO:
-      // APPLE LOGIN IMPLEMENTATION
+      uid = await this.getAppleUid(socialToken);
     } else {
       uid = await this.getNaverUid(socialToken);
     }
@@ -137,6 +142,98 @@ export class UserService {
       throw new UnauthorizedException({
         message: responseMessage.SOCIAL_LOGIN_FAIL,
       });
+    }
+  }
+
+  async getAppleUid(identityToken: string): Promise<string> {
+    // Decode the header of the identity token
+    const header: JwtHeader & { kid: string } = jwtDecode<
+      JwtHeader & { kid: string }
+    >(identityToken, {
+      header: true,
+    });
+    // Get kid value from decoded header
+    const kid: string = header.kid;
+
+    // Check if there is a key set matching kid in the public key obtained from apple
+    const appleAuthKeysResponse: AppleAuthKeysResponse =
+      await this.getAppleAuthKeys();
+    // Find and save the shared kid
+    const sharedKid: string = appleAuthKeysResponse.keys.filter(
+      (x) => x['kid'] === kid,
+    )[0]?.['kid'];
+
+    // Get public JWKS from Apple
+    const client: jwksRsa.JwksClient = jwksRsa({
+      jwksUri: 'https://appleid.apple.com/auth/keys',
+    });
+    let publicKey = '';
+    try {
+      // Get signing key from the shared key
+      const signingKey: jwksRsa.CertSigningKey | jwksRsa.RsaSigningKey =
+        await client.getSigningKey(sharedKid);
+      // Extract public key from singing key
+      publicKey = signingKey.getPublicKey();
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: responseMessage.APPLE_GET_SIGNING_KEY_FAIL,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    if (!publicKey) {
+      throw new HttpException(
+        {
+          message: responseMessage.APPLE_GET_PUBLIC_KEY_FAIL,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    try {
+      // Verify identity token using public key
+      const payload: AppleJwtPayload = <AppleJwtPayload>(
+        jwt.verify(identityToken, publicKey)
+      );
+      if (payload.iss !== 'https://appleid.apple.com') {
+        throw new HttpException(
+          {
+            message: responseMessage.TOKEN_INVALID,
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      } else if (payload.aud !== this.configService.get('APPLE_SECRET')) {
+        throw new HttpException(
+          {
+            message: responseMessage.TOKEN_INVALID,
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+      return `APPLE@${payload.sub}`;
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: responseMessage.TOKEN_INVALID,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+
+  async getAppleAuthKeys(): Promise<AppleAuthKeysResponse> {
+    try {
+      const result = await firstValueFrom(
+        this.httpService.get('https://appleid.apple.com/auth/keys'),
+      );
+      return result.data;
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: responseMessage.APPLE_GET_PUBLIC_KEY_FAIL,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 
