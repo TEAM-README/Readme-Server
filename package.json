@@ -38,6 +38,8 @@
     "@types/passport-jwt": "^3.0.6",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "jwks-rsa": "^2.1.4",
+    "jwt-decode": "^3.1.2",
     "passport": "^0.5.3",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",
