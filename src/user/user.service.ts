@@ -39,7 +39,7 @@ export class UserService {
 
   async create(
     createUserDto: CreateUserDto,
-  ): Promise<ApiResponse<{ accessToken: string }>> {
+  ): Promise<ApiResponse<{ user; accessToken: string }>> {
     const {
       platform,
       socialToken,
@@ -64,12 +64,7 @@ export class UserService {
       );
     }
 
-    const user = {
-      uid,
-      nickname,
-    };
-
-    await this.usersRepository.save(user);
+    const user = await this.usersRepository.save({ uid, nickname });
 
     const accessTokenResponse = await this.authService.createAccessToken(
       nickname,
@@ -79,7 +74,7 @@ export class UserService {
 
     return {
       message: responseMessage.CREATE_USER,
-      data: { accessToken },
+      data: { user: { id: user.id, nickname: user.nickname }, accessToken },
     };
   }
 
@@ -123,7 +118,7 @@ export class UserService {
       message: responseMessage.SOCIAL_LOGIN_SUCCESS,
       data: {
         isNewUser: false,
-        user: user,
+        user,
         accessToken,
       },
     };
