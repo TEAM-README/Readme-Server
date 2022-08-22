@@ -24,6 +24,10 @@ export class FeedService {
     createFeedDto: CreateFeedDto,
   ): Promise<ApiResponse<{ id: number; createdAt: Date }>> {
     try {
+      if (!createFeedDto.book.isbn) {
+        const fakeISBN = Math.floor(Math.random() * 10000000000).toString() + 'F';
+        createFeedDto.book.isbn = fakeISBN;
+      }
       await this.booksRepository.save(createFeedDto.book);
 
       const { id, createdAt } = await this.feedsRepository.save({
