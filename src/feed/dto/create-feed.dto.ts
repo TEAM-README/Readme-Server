@@ -38,7 +38,6 @@ export class CreateFeedDto {
 
   @IsNotEmpty()
   @IsObject()
-  @ValidateNested({ each: true })
   @Type(() => CreateBookDto)
   @ApiProperty({
     type: Book,
