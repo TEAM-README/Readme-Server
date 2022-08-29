@@ -24,31 +24,34 @@ export class FeedService {
     createFeedDto: CreateFeedDto,
   ): Promise<ApiResponse<{ id: number; createdAt: Date }>> {
     try {
+      let existingBook;
       if (!createFeedDto.book.isbn) {
-        // 해당 도서의 ISBN이 존재하지 않는 경우
-        const fakeISBN =
-          Math.floor(Math.random() * 10000000000).toString() + 'F';
+        // 도서의 ISBN이 존재하지 않는 경우
         if (!createFeedDto.book.author) {
-          // 해당 도서의 저자 정보도 존재하지 않는 경우 : 중복 확인 불가. 새로운 책 생성
-          createFeedDto.book.isbn = fakeISBN;
-          await this.booksRepository.save(createFeedDto.book);
+          // 도서의 저자 정보도 존재하지 않는 경우 : 중복 확인 불가. 랜덤 숫자를 사용한 FakeISBN으로 새로운 도서 생성
+          createFeedDto.book.isbn =
+            Math.floor(Math.random() * 10000000000).toString() + 'F';
         } else {
-          // 해당 도서의 저자 정보는 존재하는 경우 : 제목, 저자로 중복 확인
-          const existingBook = await this.booksRepository.findOneBy({
+          // 도서의 저자 정보는 존재하는 경우 : 제목, 저자로 중복 확인. 이미 존재하는 책일 경우, DB에 저장된 FakeISBN 그대로 사용
+          existingBook = await this.booksRepository.findOneBy({
             title: createFeedDto.book.title,
             author: createFeedDto.book.author,
           });
-          if (existingBook) {
-            // 기존 등록된 책 존재 : 기존 등록된 책을 createFeedDto에 할당
-            createFeedDto.book = existingBook;
-          } else {
-            // 책 신규 등록 : 랜덤 fakeISBN을 활용해 book Repository에 새로운 책 생성
-            createFeedDto.book.isbn = fakeISBN;
-            await this.booksRepository.save(createFeedDto.book);
-          }
         }
+      } else {
+        // 도서의 ISBN이 존재하는 경우
+        existingBook = await this.booksRepository.findOneBy({
+          isbn: createFeedDto.book.isbn,
+        });
       }
 
+      if (existingBook) {
+        // 이미 존재하는 도서일 경우, ISBN key값 검사로 book 중복 생성 자동으로 막힘. 존재하지 않는 도서일 경우 기존 createDto대로 새로운 book 생성
+        createFeedDto.book = existingBook;
+      }
+
+      // 예외 처리 이후 book, feed 생성
+      await this.booksRepository.save(createFeedDto.book);
       const { id, createdAt } = await this.feedsRepository.save({
         ...createFeedDto,
         user,
