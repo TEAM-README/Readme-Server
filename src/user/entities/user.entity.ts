@@ -18,7 +18,7 @@ export class User {
   @Exclude()
   uid: string;
 
-  @Column({ unique: true })
+  @Column()
   nickname: string;
 
   @Column({ nullable: true })

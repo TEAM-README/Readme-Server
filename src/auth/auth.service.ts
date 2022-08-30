@@ -19,7 +19,10 @@ export class AuthService {
   async createAccessToken(
     nickname: string,
   ): Promise<ApiResponse<{ accessToken: string }>> {
-    const user = await this.usersRepository.findOneBy({ nickname });
+    const user = await this.usersRepository.findOneBy({
+      nickname,
+      isDeleted: false,
+    });
 
     if (user) {
       const payload = {

@@ -56,7 +56,10 @@ export class UserService {
       uid = await this.getNaverUid(socialToken);
     }
 
-    const existingUser = await this.usersRepository.findOneBy({ nickname });
+    const existingUser = await this.usersRepository.findOneBy({
+      nickname,
+      isDeleted: false,
+    });
     if (existingUser) {
       throw new HttpException(
         { message: responseMessage.DUPLICATE_NICKNAME },
@@ -97,7 +100,10 @@ export class UserService {
       uid = await this.getNaverUid(socialToken);
     }
 
-    const user = await this.usersRepository.findOneBy({ uid });
+    const user = await this.usersRepository.findOneBy({
+      uid,
+      isDeleted: false,
+    });
     // new signing up user
     if (!user) {
       return {
