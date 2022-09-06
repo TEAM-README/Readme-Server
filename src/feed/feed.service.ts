@@ -163,12 +163,19 @@ export class FeedService {
       where: { isDeleted: false, user: theUser },
       order: { createdAt: 'DESC' },
     });
+
     const duplicatedBooks = myFeeds.map((row) => row.book);
-    const books = [...new Set(duplicatedBooks)];
+    const resultBooks = duplicatedBooks.filter(
+      (book, index) =>
+        duplicatedBooks.findIndex(
+          (firstBook) => firstBook.isbn === book.isbn,
+        ) === index,
+    );
+
     return {
       message: responseMessage.READ_RECENT_BOOKS_SUCCESS,
       data: {
-        books: books,
+        books: resultBooks,
       },
     };
   }
