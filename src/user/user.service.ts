@@ -269,7 +269,10 @@ export class UserService {
   async getUserByNickname(
     nickname: string,
   ): Promise<ApiResponse<{ available: boolean }>> {
-    const user = await this.usersRepository.findOneBy({ nickname });
+    const user = await this.usersRepository.findOneBy({
+      nickname,
+      isDeleted: false,
+    });
     let available;
 
     if (user) {
