@@ -41,3 +41,6 @@ lerna-debug.log*
 
 # vscode settings
 .vscode
+
+# migration files
+migrations
