@@ -12,7 +12,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath:
+        process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,8 +26,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
-        synchronize: true,
         namingStrategy: new SnakeNamingStrategy(),
+        synchronize: process.env.NODE_ENV === 'dev', // dev이면 synchronize = true, prod이면 synchronize = false
       }),
     }),
     UserModule,
