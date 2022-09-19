@@ -2,6 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+const serverPort = process.env.API_SERVER_PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,6 +29,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3000);
+  await app.listen(serverPort, () => {
+    console.log(`
+    ################################################
+          🛡️  Server listening on port ${serverPort} 🛡️
+    ################################################
+  `);
+  });
 }
 bootstrap();

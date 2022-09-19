@@ -36,6 +36,11 @@ lerna-debug.log*
 
 # configs
 .env
+.env.dev
+.env.prod
 
 # vscode settings
 .vscode
+
+# migration files
+migrations
